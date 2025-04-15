@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import random
+import math
+import numpy as np
 import uvicorn
 from pydantic import BaseModel
 from typing import List, Optional
@@ -8,11 +10,11 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+	CORSMiddleware,
+	allow_origins=["*"],
+	allow_credentials=True,
+	allow_methods=["*"],
+	allow_headers=["*"],
 )
 
 # Hang so
@@ -26,22 +28,23 @@ WINDOW_LENGTH = 4
 
 # Các hàm logic của Connect4
 def create_board():
-    board = np.zeros((ROW_COUNT, COLUMN_COUNT))
-    return board
+	board = np.zeros((ROW_COUNT, COLUMN_COUNT))
+	return board
 
 def drop_piece(board, row, col, piece):
-    board[row][col] = piece
+	board[row][col] = piece
 
 def is_valid_location(board, col):
-    return board[ROW_COUNT-1][col] == 0
+	return board[0][col] == 0
 
 def get_next_open_row(board, col):
-    for r in range(ROW_COUNT):
+    # Duyệt từ hàng dưới cùng (ROW_COUNT-1) lên hàng đầu (index 0)
+    for r in range(ROW_COUNT-1, -1, -1):
         if board[r][col] == 0:
             return r
 
 def winning_move(board, piece):
-    # Check horizontal locations for win
+	# Check horizontal locations for win
 	for c in range(COLUMN_COUNT-3):
 		for r in range(ROW_COUNT):
 			if board[r][c] == piece and board[r][c+1] == piece and board[r][c+2] == piece and board[r][c+3] == piece:
@@ -190,34 +193,42 @@ def pick_best_move(board, piece):
 
 	return best_col
 
+def print_board(board):
+	print(board)
+
 class GameState(BaseModel):
-    board: List[List[int]]
-    current_player: int
-    valid_moves: List[int]
+	board: List[List[int]]
+	current_player: int
+	valid_moves: List[int]
 
 class AIResponse(BaseModel):
-    move: int
+	move: int
 
 @app.post("/api/connect4-move")
 async def make_move(game_state: GameState) -> AIResponse:
-    try:    
-        # Chuyển board sang numpy array để tính toán
-        board = np.array(game_state.board)
-        valid_locations = get_valid_locations(board)
-        if not game_state.valid_moves:
-            raise ValueError("Không có nước đi hợp lệ")
-        
-        # Code AI của bạn ở đây
-        col, minimax_score = minimax(board, 5, -math.inf, math.inf, True)
-        if col is None or col not in valid_locations:
-            # Nếu minimax không đưa ra nước đi hợp lệ, dùng chiến lược chốt điểm đơn giản
-            col = pick_best_move(board, AI_PIECE)
-        
-        return AIResponse(move=col)
-    except Exception as e:
-        if game_state.valid_moves:
-            return AIResponse(move=game_state.valid_moves[0])
-        raise HTTPException(status_code=400, detail=str(e))
+	try:    
+		# Chuyển board sang numpy array để tính toán
+		board = np.array(game_state.board)
+		AI_PIECE = game_state.current_player
+		PLAYER_PIECE = 3 - AI_PIECE # Nếu AI là 1 thì người chơi là 2 và ngược lại
+		valid_locations = get_valid_locations(board)
+		if not game_state.valid_moves:
+			raise ValueError("Không có nước đi hợp lệ")
+		
+		# Code AI của bạn ở đây
+		col, minimax_score = minimax(board, 5, -math.inf, math.inf, True)
+		if col is None or col not in valid_locations:
+			# Nếu minimax không đưa ra nước đi hợp lệ, dùng chiến lược chốt điểm đơn giản
+			col = pick_best_move(board, AI_PIECE)
+
+		print_board(board)
+		print(AI_PIECE)
+		
+		return AIResponse(move=col)
+	except Exception as e:
+		if game_state.valid_moves:
+			return AIResponse(move=game_state.valid_moves[0])
+		raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+	uvicorn.run(app, host="0.0.0.0", port=8080)
