@@ -33,7 +33,7 @@ class GameState(BaseModel):
 	board: List[List[int]]
 	current_player: int
 	valid_moves: List[int]
-	is_new_game: bool
+	is_new_game: bool = False
 
 class AIResponse(BaseModel):
 	move: int
@@ -340,11 +340,11 @@ async def make_move(game_state: GameState) -> AIResponse:
 		board = game_state.board
 		valid_moves = game_state.valid_moves
 
-		if game_state.is_new_game:
-			# Reset các biến global và trạng thái của AI khi bắt đầu ván mới
-			global transposition_table
-			transposition_table = {}
-			print("Bắt đầu ván mới")
+		# if game_state.is_new_game:
+		# 	# Reset các biến global và trạng thái của AI khi bắt đầu ván mới
+		# 	global transposition_table
+		# 	transposition_table = {}
+		# 	print("Bắt đầu ván mới")
 		
 		# Update global variables
 		global PLAYER_PIECE, AI_PIECE
