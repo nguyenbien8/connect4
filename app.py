@@ -328,13 +328,6 @@ def minimax(board, depth, alpha, beta, maximizing_player):
                 break
         transposition_table[state_key] = (column, value)
         return column, value
-    
-
-def print_board2(board):
-	print("\nTrạng thái bàn cờ:")
-	for row in board:
-		print(" | ".join(str(cell) if cell != 0 else "." for cell in row))
-	print("-" * (len(board[0]) * 4 - 1))
 
 # API endpoint
 @app.post("/api/connect4-move")
@@ -353,7 +346,6 @@ async def make_move(game_state: GameState) -> AIResponse:
             global transposition_table
             transposition_table = {}
             print("Bắt đầu ván mới - Đã reset transposition table")
-            print_board2(GameState.board)
         
         # Update global variables
         global PLAYER_PIECE, AI_PIECE
