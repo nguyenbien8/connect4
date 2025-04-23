@@ -345,7 +345,6 @@ async def make_move(game_state: GameState) -> AIResponse:
 			global transposition_table
 			transposition_table = {}
 			print("Bắt đầu ván mới")
-			game_state.is_new_game = False
 		
 		# Update global variables
 		global PLAYER_PIECE, AI_PIECE
