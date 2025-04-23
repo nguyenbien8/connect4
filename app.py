@@ -362,7 +362,7 @@ async def make_move(game_state: GameState) -> AIResponse:
             raise ValueError("Không có nước đi hợp lệ sau khi xác minh")
         
         # Use minimax algorithm to select the best move
-        selected_col, minimax_score = minimax(board, 7, -math.inf, math.inf, True)
+        selected_col, minimax_score = minimax(board, 5, -math.inf, math.inf, True)
         
         # Fallback to random move if needed
         if selected_col is None or selected_col not in verified_valid_moves:
