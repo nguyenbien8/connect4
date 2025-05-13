@@ -92,7 +92,7 @@ function alphabeta(node, depth, α, β, maximizingPlayer) is
 
 Cùng với việc xây dựng dựa trên 2 thuật toán cơ bản là `Minimax` và cắt tỉa `Alpha-Beta`. Nhóm em đã thực hiện một số cải tiến quan trọng cho AI của Game giúp AI có khả năng đưa ra quyết định tối ưu trong thời gian hợp lý và xây dựng chiến lược tấn công hiệu quả.
 
-1. **Sử dụng bảng chuyển vị (Transposition Table)**
+**1. Sử dụng bảng chuyển vị (Transposition Table)**
 
 ```python
 # Check transposition table
@@ -102,7 +102,7 @@ if state_key in transposition_table:
 
 - Bảng chuyển vị lưu trữ các trạng thái đã được tính toán trước đó để tránh việc tính toán lại, giúp cải thiện đáng kể hiệu suất khi gặp lại trạng thái đã xử lý.
 
-2. **Sắp xếp nước đi hợp lệ (Move Ordering)**
+**2. Sắp xếp nước đi hợp lệ (Move Ordering)**
 
 ```python
 def sort_valid_moves_with_boards(valid_moves, board, piece):
@@ -119,7 +119,7 @@ def sort_valid_moves_with_boards(valid_moves, board, piece):
 
 - Nước đi được sắp xếp theo điểm số tiềm năng, giúp cắt tỉa `Alpha-Beta` hoạt động hiệu quả hơn bằng cách đánh giá các nước đi tốt nhất trước.
 
-3. **Tối ưu hóa bộ nhớ với Tuple**
+**3. Tối ưu hóa bộ nhớ với Tuple**
 
 ```python
 # Convert board to hashable format
