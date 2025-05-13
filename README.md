@@ -26,7 +26,7 @@ Connect Four là một trò chơi chiến thuật dành cho hai người chơi. 
 
 ## Thuật toán
 
-Nhóm em phát triển AI cho Game `Connect4` dựa trên thuật toán `minimax` và kỹ thuật cắt tỉa `alpha-beta`. Dưới đây là tổng quan về thuật toán `minimax` và kỹ thuật cắt tỉa `alpha-beta`
+Nhóm em phát triển AI cho Game `Connect4` dựa trên thuật toán `Minimax` và kỹ thuật cắt tỉa `Alpha-Beta`. Dưới đây là tổng quan về thuật toán `Minimax` và kỹ thuật cắt tỉa `Alpha-Beta`
 
 ### Minimax
 
@@ -34,8 +34,8 @@ Minimax là thuật toán tìm kiếm đệ quy sử dụng trong lý thuyết t
 
 #### Nguyên lý cơ bản:
 - Minimax xem trò chơi như một cây quyết định, trong đó mỗi nút đại diện cho một trạng thái của trò chơi, và mỗi nhánh đại diện cho một nước đi hợp lệ.
-- Hai người chơi được gọi là "MAX" (người chơi tối đa hóa điểm số) và "MIN" (người chơi tối thiểu hóa điểm số).
-- Thuật toán giả định rằng cả hai người chơi đều chơi tối ưu (MIN luôn chọn nước đi gây bất lợi nhất cho MAX).
+- Hai người chơi được gọi là `Max` (người chơi tối đa hóa điểm số) và `Min` (người chơi tối thiểu hóa điểm số).
+- Thuật toán giả định rằng cả hai người chơi đều chơi tối ưu (`Min` luôn chọn nước đi gây bất lợi nhất cho `Max`).
 
 #### Mã nguồn thuật toán Minimax:
 
@@ -57,12 +57,12 @@ function minimax(node, depth, maximizingPlayer) is
 
 ### Cắt tỉa alpha-beta
 
-Cắt tỉa Alpha-Beta là một cải tiến của thuật toán Minimax, giúp giảm số lượng nút cần đánh giá trong cây tìm kiếm mà không ảnh hưởng đến kết quả cuối cùng.
+Cắt tỉa `Alpha-Beta` là một cải tiến của thuật toán `Minimax`, giúp giảm số lượng nút cần đánh giá trong cây tìm kiếm mà không ảnh hưởng đến kết quả cuối cùng.
 
 #### Nguyên lý cơ bản:
 - Alpha: Giá trị tốt nhất hiện tại đã tìm thấy cho người chơi MAX trên đường đi tới nút hiện tại.
 - Beta: Giá trị tốt nhất hiện tại đã tìm thấy cho người chơi MIN trên đường đi tới nút hiện tại.
-- Khi alpha ≥ beta, chúng ta có thể cắt tỉa (bỏ qua) các nhánh còn lại vì chúng không ảnh hưởng đến quyết định cuối cùng.
+- Khi `alpha ≥ beta`, chúng ta có thể cắt tỉa (bỏ qua) các nhánh còn lại vì chúng không ảnh hưởng đến quyết định cuối cùng.
 
 #### Mã nguồn thuật toán Alpha-Beta:
 
@@ -90,9 +90,9 @@ function alphabeta(node, depth, α, β, maximizingPlayer) is
 
 ## Cải tiến thuật toán
 
-Cùng với việc xây dựng dựa trên 2 thuật toán cơ bản là `minimax` và cắt tỉa `alpha-beta`. Nhóm em đã thực hiện một số cải tiến quan trọng cho AI của Game giúp AI có khả năng đưa ra quyết định tối ưu trong thời gian hợp lý và xây dựng chiến lược tấn công hiệu quả.
+Cùng với việc xây dựng dựa trên 2 thuật toán cơ bản là `Minimax` và cắt tỉa `Alpha-Beta`. Nhóm em đã thực hiện một số cải tiến quan trọng cho AI của Game giúp AI có khả năng đưa ra quyết định tối ưu trong thời gian hợp lý và xây dựng chiến lược tấn công hiệu quả.
 
-1. Sử dụng bảng chuyển vị (Transposition Table)
+1. **Sử dụng bảng chuyển vị (Transposition Table)**
 
 ```python
 # Check transposition table
@@ -102,7 +102,7 @@ if state_key in transposition_table:
 
 - Bảng chuyển vị lưu trữ các trạng thái đã được tính toán trước đó để tránh việc tính toán lại, giúp cải thiện đáng kể hiệu suất khi gặp lại trạng thái đã xử lý.
 
-2. Sắp xếp nước đi hợp lệ (Move Ordering)
+2. **Sắp xếp nước đi hợp lệ (Move Ordering)**
 
 ```python
 def sort_valid_moves_with_boards(valid_moves, board, piece):
@@ -117,9 +117,9 @@ def sort_valid_moves_with_boards(valid_moves, board, piece):
     return scored_moves
 ```
 
-- Nước đi được sắp xếp theo điểm số tiềm năng, giúp cắt tỉa Alpha-Beta hoạt động hiệu quả hơn bằng cách đánh giá các nước đi tốt nhất trước.
+- Nước đi được sắp xếp theo điểm số tiềm năng, giúp cắt tỉa `Alpha-Beta` hoạt động hiệu quả hơn bằng cách đánh giá các nước đi tốt nhất trước.
 
-3. Tối ưu hóa bộ nhớ với Tuple
+3. **Tối ưu hóa bộ nhớ với Tuple**
 
 ```python
 # Convert board to hashable format
@@ -131,7 +131,7 @@ state_key = (board_tuple, depth, maximizing_player)
 
 ## Hướng phát triển
 
-Trong tương lai để phát triển hơn cho AI của Game hoạt động tốt hơn, nhóm em dự định cải tiến thêm cho AI bằng cách áp dụng mô hình học máy `reinforcement learning` để train AI tốt hơn. Từ đó tích hợp vào giao diện và thêm các cấp độ khó khác nhau của AI trong giao diện của người dùng.
+Trong tương lai để phát triển hơn cho AI của Game hoạt động tốt hơn, nhóm em dự định cải tiến thêm cho AI bằng cách áp dụng mô hình học máy `Reinforcement Learning` để train AI tốt hơn. Từ đó tích hợp vào giao diện và thêm các cấp độ khó khác nhau của AI trong giao diện của người dùng.
 
 ## Tài liệu tham khảo
 
