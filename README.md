@@ -1,152 +1,144 @@
-# Connect 4 AI API
+# 🎮 Connect Four AI Project Report
 
-Ứng dụng API cho phép tích hợp thuật toán AI vào hệ thống Connect 4.
+## 📋 Thành viên nhóm
+- `23021477` Nguyễn Văn Biển
+- `23021551` Nguyễn Quang Hiếu
+- `23021543` Tô Ngọc Hải
+- `23021721` Đỗ Phương Thảo
 
-## API Endpoint
+## 📝 Mục lục
+1. [Giới thiệu](#giới-thiệu)
+2. [Tổng quan về trò chơi Connect Four](#tổng-quan-về-trò-chơi-connect-four)
+3. [Thuật toán](#thuật-toán)
+   - [Minimax](#minimax)
+   - [Cắt tỉa Alpha-Beta](#cắt-tỉa-alpha-beta)
+4. [Cải tiến thuật toán](#cải-tiến-thuật-toán)
+5. [Hướng phát triển](#hướng-phát-triển)
+6. [Tài liệu tham khảo](#tài-liệu-tham-khảo)
 
-Sau khi triển khai API của bạn, bạn sẽ cần cung cấp URL endpoint cho server chính:
-```
-https://your-ai-service.com
-```
+## Giới thiệu
 
-### Ví dụ URL sau khi triển khai bằng Ngrok:
-```
-https://c3b1-2405-4802-21ad-48b0-7c4a-8729-ca-4c80.ngrok-free.app
-```
+Báo cáo này nhóm em xin trình bày về việc phát triển trí tuệ nhân tạo (AI) cho trò chơi Connect Four. Nhóm đã triển khai thuật toán Minimax kết hợp với kỹ thuật cắt tỉa Alpha-Beta, cùng với một số cải tiến để tối ưu hóa hiệu suất và tăng cường khả năng chơi của AI.
 
-## Format API
+## Tổng quan về trò chơi Connect Four
 
-### Request Format
-```json
-{
-  "board": [[0,0,0,...], [...], ...],
-  "current_player": 1,
-  "valid_moves": [0,1,2,...]
-}
-```
+Connect Four là một trò chơi chiến thuật dành cho hai người chơi. Mỗi người chơi sẽ lần lượt thả quân cờ của mình xuống bảng gồm 7 cột và 6 hàng. Quân cờ sẽ rơi xuống vị trí thấp nhất có thể trong cột được chọn. Người chơi đầu tiên tạo được một đường thẳng liên tiếp gồm 4 quân cờ theo chiều ngang, dọc hoặc chéo sẽ thắng cuộc.
 
-Trong đó:
-- `board`: Mảng 2 chiều (6x7) biểu diễn bảng Connect 4
-  - `0`: Ô trống
-  - `1`: Quân của người chơi 1
-  - `2`: Quân của người chơi 2
-- `current_player`: Người chơi hiện tại (1 hoặc 2)
-- `valid_moves`: Các cột còn có thể đặt quân (từ 0-6)
+## Thuật toán
 
-### Response Format
-```json
-{
-  "move": 3
-}
-```
+Nhóm em phát triển AI cho Game `Connect4` dựa trên thuật toán `minimax` và kỹ thuật cắt tỉa `alpha-beta`. Dưới đây là tổng quan về thuật toán `minimax` và kỹ thuật cắt tỉa `alpha-beta`
 
-Trong đó:
-- `move`: Cột mà AI quyết định đặt quân (chỉ số từ 0-6)
+### Minimax
 
-Ví dụ: Nếu API trả về `move = 3`, server sẽ đặt quân vào ô trống thấp nhất của cột thứ 4 (vì chỉ số bắt đầu từ 0).
+Minimax là thuật toán tìm kiếm đệ quy sử dụng trong lý thuyết trò chơi và trí tuệ nhân tạo để đưa ra quyết định tối ưu cho các trò chơi hai người chơi zero-sum (tổng bằng không), như cờ vua, cờ tướng hay Connect Four.
 
-## Triển khai API
+#### Nguyên lý cơ bản:
+- Minimax xem trò chơi như một cây quyết định, trong đó mỗi nút đại diện cho một trạng thái của trò chơi, và mỗi nhánh đại diện cho một nước đi hợp lệ.
+- Hai người chơi được gọi là "MAX" (người chơi tối đa hóa điểm số) và "MIN" (người chơi tối thiểu hóa điểm số).
+- Thuật toán giả định rằng cả hai người chơi đều chơi tối ưu (MIN luôn chọn nước đi gây bất lợi nhất cho MAX).
 
-### Cài đặt thư viện
-```bash
-pip install -r requirements.txt
-```
-
-### File app.py
-```python
-from fastapi import FastAPI, HTTPException
-import random
-import uvicorn
-from pydantic import BaseModel
-from typing import List, Optional
-from fastapi.middleware.cors import CORSMiddleware
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-class GameState(BaseModel):
-    board: List[List[int]]
-    current_player: int
-    valid_moves: List[int]
-
-class AIResponse(BaseModel):
-    move: int
-
-@app.post("/api/connect4-move")
-async def make_move(game_state: GameState) -> AIResponse:
-    try:
-        if not game_state.valid_moves:
-            raise ValueError("Không có nước đi hợp lệ")
-            
-        # TODO: Thay thế mã này bằng thuật toán AI của bạn
-        selected_move = random.choice(game_state.valid_moves)
-        
-        return AIResponse(move=selected_move)
-    except Exception as e:
-        if game_state.valid_moves:
-            return AIResponse(move=game_state.valid_moves[0])
-        raise HTTPException(status_code=400, detail=str(e))
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
-```
-
-### Chạy server
-```bash
-python app.py
-```
-
-## Triển khai public với Ngrok
-
-Để server của bạn có thể truy cập được từ internet, bạn có thể sử dụng Ngrok:
-
-1. Tải và cài đặt Ngrok: https://ngrok.com/download
-2. Chạy server FastAPI của bạn (mặc định cổng 8080)
-3. Trong terminal khác, chạy lệnh:
-```bash
-ngrok http 8080
-```
-4. Sao chép URL Forwarding (dạng https://xxxx-xxxx.ngrok-free.app) và đăng ký với server chính.
-
-## Phát triển thuật toán AI
-
-Để cải thiện AI của bạn, hãy thay thế đoạn mã sau trong hàm `make_move`:
+#### Mã nguồn thuật toán Minimax:
 
 ```python
-# TODO: Thay thế mã này bằng thuật toán AI của bạn
-selected_move = random.choice(game_state.valid_moves)
+function minimax(node, depth, maximizingPlayer) is
+    if depth = 0 or node is a terminal node then
+        return the heuristic value of node
+    if maximizingPlayer then
+        value := −∞
+        for each child of node do
+            value := max(value, minimax(child, depth − 1, FALSE))
+        return value
+    else (* minimizing player *)
+        value := +∞
+        for each child of node do
+            value := min(value, minimax(child, depth − 1, TRUE))
+        return value
 ```
 
-Bạn có thể cài đặt các thuật toán như Minimax, Alpha-Beta Pruning, hoặc các kỹ thuật Machine Learning để cải thiện khả năng chơi của AI.
+### Cắt tỉa alpha-beta
 
-## Ví dụ Game State
+Cắt tỉa Alpha-Beta là một cải tiến của thuật toán Minimax, giúp giảm số lượng nút cần đánh giá trong cây tìm kiếm mà không ảnh hưởng đến kết quả cuối cùng.
 
-```json
-{
-  "board": [
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0]
-  ],
-  "current_player": 1,
-  "valid_moves": [0, 1, 2, 3, 4, 5, 6]
-}
+#### Nguyên lý cơ bản:
+- Alpha: Giá trị tốt nhất hiện tại đã tìm thấy cho người chơi MAX trên đường đi tới nút hiện tại.
+- Beta: Giá trị tốt nhất hiện tại đã tìm thấy cho người chơi MIN trên đường đi tới nút hiện tại.
+- Khi alpha ≥ beta, chúng ta có thể cắt tỉa (bỏ qua) các nhánh còn lại vì chúng không ảnh hưởng đến quyết định cuối cùng.
+
+#### Mã nguồn thuật toán Alpha-Beta:
+
+```python
+function alphabeta(node, depth, α, β, maximizingPlayer) is
+    if depth == 0 or node is terminal then
+        return the heuristic value of node
+    if maximizingPlayer then
+        value := −∞
+        for each child of node do
+            value := max(value, alphabeta(child, depth − 1, α, β, FALSE))
+            if value ≥ β then
+                break (* β cutoff *)
+            α := max(α, value)
+        return value
+    else
+        value := +∞
+        for each child of node do
+            value := min(value, alphabeta(child, depth − 1, α, β, TRUE))
+            if value ≤ α then
+                break (* α cutoff *)
+            β := min(β, value)
+        return value
 ```
 
-## Lưu ý
+## Cải tiến thuật toán
 
-- API của bạn sẽ tự động nhận dữ liệu từ server và chuyển đổi thành đối tượng `GameState`
-- Bạn chỉ cần tập trung vào việc phát triển thuật toán AI để chọn nước đi tốt nhất
-- Đảm bảo API của bạn luôn trả về một nước đi hợp lệ (nằm trong danh sách `valid_moves`)
-- Nếu xảy ra lỗi, API sẽ tự động chọn nước đi đầu tiên trong danh sách `valid_moves`
-``` 
+Cùng với việc xây dựng dựa trên 2 thuật toán cơ bản là `minimax` và cắt tỉa `alpha-beta`. Nhóm em đã thực hiện một số cải tiến quan trọng cho AI của Game giúp AI có khả năng đưa ra quyết định tối ưu trong thời gian hợp lý và xây dựng chiến lược tấn công hiệu quả.
+
+1. Sử dụng bảng chuyển vị (Transposition Table)
+
+```python
+# Check transposition table
+if state_key in transposition_table:
+    return transposition_table[state_key]
+```
+
+- Bảng chuyển vị lưu trữ các trạng thái đã được tính toán trước đó để tránh việc tính toán lại, giúp cải thiện đáng kể hiệu suất khi gặp lại trạng thái đã xử lý.
+
+2. Sắp xếp nước đi hợp lệ (Move Ordering)
+
+```python
+def sort_valid_moves_with_boards(valid_moves, board, piece):
+    scored_moves = []
+    for col in valid_moves:
+        row = get_next_open_row(board, col)
+        if row != -1:
+            board_copy = drop_piece(board, row, col, piece)
+            score = score_position(board_copy, piece)
+            scored_moves.append((col, score, board_copy))
+    scored_moves.sort(key=lambda x: x[1], reverse=True)
+    return scored_moves
+```
+
+- Nước đi được sắp xếp theo điểm số tiềm năng, giúp cắt tỉa Alpha-Beta hoạt động hiệu quả hơn bằng cách đánh giá các nước đi tốt nhất trước.
+
+3. Tối ưu hóa bộ nhớ với Tuple
+
+```python
+# Convert board to hashable format
+board_tuple = tuple(tuple(row) for row in board)
+state_key = (board_tuple, depth, maximizing_player)
+```
+
+- Chuyển đổi bảng thành tuple để có thể sử dụng làm khóa trong bảng chuyển vị, giúp lưu trữ và tìm kiếm trạng thái hiệu quả hơn.
+
+## Hướng phát triển
+
+Trong tương lai để phát triển hơn cho AI của Game hoạt động tốt hơn, nhóm em dự định cải tiến thêm cho AI bằng cách áp dụng mô hình học máy `reinforcement learning` để train AI tốt hơn. Từ đó tích hợp vào giao diện và thêm các cấp độ khó khác nhau của AI trong giao diện của người dùng.
+
+## Tài liệu tham khảo
+
+🐙 **GitHub**:
+   - [GitHub - Connect Four AI Implementations](https://github.com/topics/connect-four)
+   - [GitHub - Minimax Algorithm Examples](https://github.com/topics/minimax)
+
+▶️ **YouTube**: [Keith Galli](https://www.youtube.com/@KeithGalli)
+
+🤖 **ChatGPT**
