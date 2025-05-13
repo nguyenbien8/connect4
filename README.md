@@ -18,7 +18,7 @@
 
 ## 1️⃣ GIỚI THIỆU
 
-- Báo cáo này nhóm em xin trình bày về việc phát triển trí tuệ nhân tạo (AI) cho trò chơi Connect Four. Nhóm đã triển khai thuật toán Minimax kết hợp với kỹ thuật cắt tỉa Alpha-Beta, cùng với một số cải tiến để tối ưu hóa hiệu suất và tăng cường khả năng chơi của AI.
+- Báo cáo này nhóm em xin trình bày về việc phát triển trí tuệ nhân tạo (AI) cho trò chơi Connect Four. Nhóm đã triển khai thuật toán `Minimax` kết hợp với kỹ thuật cắt tỉa `Alpha-Beta`, cùng với một số cải tiến để tối ưu hóa hiệu suất và tăng cường khả năng chơi của AI.
 
 ## 2️⃣ TỔNG QUAN VỀ TRÒ CHƠI CONNECT FOUR
 
@@ -60,8 +60,8 @@ function minimax(node, depth, maximizingPlayer) is
 - Cắt tỉa `Alpha-Beta` là một cải tiến của thuật toán `Minimax`, giúp giảm số lượng nút cần đánh giá trong cây tìm kiếm mà không ảnh hưởng đến kết quả cuối cùng.
 
 #### Nguyên lý cơ bản:
-- Alpha: Giá trị tốt nhất hiện tại đã tìm thấy cho người chơi MAX trên đường đi tới nút hiện tại.
-- Beta: Giá trị tốt nhất hiện tại đã tìm thấy cho người chơi MIN trên đường đi tới nút hiện tại.
+- Alpha: Giá trị tốt nhất hiện tại đã tìm thấy cho người chơi `Max` trên đường đi tới nút hiện tại.
+- Beta: Giá trị tốt nhất hiện tại đã tìm thấy cho người chơi `Min` trên đường đi tới nút hiện tại.
 - Khi `alpha ≥ beta`, chúng ta có thể cắt tỉa (bỏ qua) các nhánh còn lại vì chúng không ảnh hưởng đến quyết định cuối cùng.
 
 #### Mã nguồn thuật toán Alpha-Beta:
@@ -127,17 +127,17 @@ board_tuple = tuple(tuple(row) for row in board)
 state_key = (board_tuple, depth, maximizing_player)
 ```
 
-- Chuyển đổi bảng thành tuple để có thể sử dụng làm khóa trong bảng chuyển vị, giúp lưu trữ và tìm kiếm trạng thái hiệu quả hơn.
+- Chuyển đổi bảng thành `Tuple` để có thể sử dụng làm khóa trong bảng chuyển vị, giúp lưu trữ và tìm kiếm trạng thái hiệu quả hơn.
 
 ## 5️⃣ HƯỚNG PHÁT TRIỂN
 
 - Trong tương lai để phát triển hơn cho AI của Game hoạt động tốt hơn, nhóm em dự định cải tiến thêm cho AI bằng cách áp dụng mô hình học máy `Reinforcement Learning` cụ thể như:
 
-  - **Khởi tạo môi trường:** Xây dựng môi trường trò chơi tuân theo chuẩn (như OpenAI Gym) để agent có thể tương tác - nhận trạng thái bàn cờ, chọn hành động (cột), và nhận phần thưởng.
-  - **Định nghĩa phần thưởng (Reward):** Thiết lập cơ chế thưởng/phạt đơn giản: +1 khi thắng, –1 khi thua, và 0 cho các nước đi trung gian, giúp agent học tập mục tiêu chiến thắng.
-  - **Thu thập kinh nghiệm:** Cho agent chơi nhiều tập episode, lưu lại các trải nghiệm (state, action, reward, next_state) vào bộ nhớ tạm.
-  - **Cập nhật chiến lược:** Sử dụng phương pháp học tăng cường (ví dụ Q-Learning hoặc DQN) để điều chỉnh chiến lược chọn nước đi dựa trên kinh nghiệm đã lưu.
-  - **Tối ưu và đánh giá:** Theo dõi tỉ lệ thắng của agent qua các giai đoạn huấn luyện, điều chỉnh tham số (learning rate, độ phân giải môi trường) và so sánh với AI Minimax/Alpha-Beta để đảm bảo tiến bộ.
+  - **Khởi tạo môi trường:** Xây dựng môi trường trò chơi tuân theo chuẩn (như `OpenAI` `Gym`) để agent có thể tương tác - nhận trạng thái bàn cờ, chọn hành động (cột), và nhận phần thưởng.
+  - **Định nghĩa phần thưởng (`Reward`):** Thiết lập cơ chế thưởng/phạt đơn giản: +1 khi thắng, –1 khi thua, và 0 cho các nước đi trung gian, giúp agent học tập mục tiêu chiến thắng.
+  - **Thu thập kinh nghiệm:** Cho agent chơi nhiều tập `episode`, lưu lại các trải nghiệm (`state`, `action`, `reward`, `next_state`) vào bộ nhớ tạm.
+  - **Cập nhật chiến lược:** Sử dụng phương pháp học tăng cường (ví dụ `Q-Learning` hoặc `DQN`) để điều chỉnh chiến lược chọn nước đi dựa trên kinh nghiệm đã lưu.
+  - **Tối ưu và đánh giá:** Theo dõi tỉ lệ thắng của agent qua các giai đoạn huấn luyện, điều chỉnh tham số (`learning rate`, `độ phân giải môi trường`) và so sánh với AI `Minimax/Alpha-Beta` để đảm bảo tiến bộ.
 
 ## 6️⃣ TÀI LIỆU THAM KHẢO
 
