@@ -55,7 +55,7 @@ function minimax(node, depth, maximizingPlayer) is
         return value
 ```
 
-### Cắt tỉa alpha-beta
+### Cắt tỉa Alpha-Beta
 
 - Cắt tỉa `Alpha-Beta` là một cải tiến của thuật toán `Minimax`, giúp giảm số lượng nút cần đánh giá trong cây tìm kiếm mà không ảnh hưởng đến kết quả cuối cùng.
 
