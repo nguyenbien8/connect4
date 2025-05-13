@@ -11,11 +11,10 @@ An implementation of the classic Connect Four game with an intelligent AI oppone
 - [Overview](#overview)
 - [Features](#features)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Project Structure](#project-structure)
+- [Usage](#usage)
 - [Algorithm](#algorithm)
-  - [Minimax](#minimax)
-  - [Alpha-Beta Pruning](#alpha-beta-pruning)
+  - [Minimax and Alpha-Beta Pruning](#minimax-and-alpha-beta-pruning)
   - [Optimizations](#optimizations)
 - [Future Development](#future-development)
 - [Team](#team)
@@ -28,8 +27,6 @@ Connect Four is a two-player connection board game where players take turns drop
 ## Features
 
 - Full implementation of Connect Four game rules
-- Terminal-based user interface
-- AI opponent with multiple difficulty levels
 - Advanced Minimax algorithm with Alpha-Beta pruning
 - Performance optimizations using transposition tables
 - Move ordering for improved Alpha-Beta efficiency
@@ -48,16 +45,6 @@ cd connect4
 pip install -r requirements.txt
 ```
 
-## Usage
-
-Run the game using Python:
-
-```bash
-python app.py
-```
-
-Follow the on-screen instructions to play the game. Enter the column number (0-6) to drop your piece.
-
 ## Project Structure
 
 ```bash
@@ -71,11 +58,25 @@ connect4/
 └── requirements.txt     # Project dependencies
 ```
 
+## Usage
+
+If you want to play connect 4 game between human and computer using interface, please follow the command below:
+
+Run the game using Python:
+
+```bash
+python connect4_AI_People.py
+```
+
+Play and enjoy the game with the game interface
+
 ## Algorithm
 
-### Minimax
+### Minimax and Alpha-Beta Pruning
 
 The Minimax algorithm is used to determine the optimal move for the AI player. It works by recursively exploring the game tree, evaluating positions, and selecting moves that maximize the AI's chances of winning while assuming the opponent plays optimally.
+
+Alpha-Beta pruning is an optimization technique for the Minimax algorithm that significantly reduces the number of nodes that need to be evaluated in the search tree.
 
 Core implementation:
 
@@ -106,12 +107,38 @@ def minimax(board, depth, alpha, beta, maximizing_player):
         transposition_table[state_key] = result
         return result
     
-    # Implementation continues...
+    # Maximizing player (AI)    
+    if maximizing_player:
+        value = -math.inf
+        column = None
+        sorted_moves = sort_valid_moves_with_boards(valid_moves, board, AI_PIECE)
+        for col, _, board_copy in sorted_moves:
+            new_score = minimax(board_copy, depth-1, alpha, beta, False)[1]
+            if new_score > value:
+                value = new_score
+                column = col
+            alpha = max(alpha, value)
+            if alpha >= beta:
+                break
+        transposition_table[state_key] = (column, value)
+        return column, value
+    
+    # Minimizing player (opponent)
+    else:
+        value = math.inf
+        column = None
+        sorted_moves = sort_valid_moves_with_boards(valid_moves, board, PLAYER_PIECE)
+        for col, _, board_copy in sorted_moves:
+            new_score = minimax(board_copy, depth-1, alpha, beta, True)[1]
+            if new_score < value:
+                value = new_score
+                column = col
+            beta = min(beta, value)
+            if alpha >= beta:
+                break
+        transposition_table[state_key] = (column, value)
+        return column, value
 ```
-
-### Alpha-Beta Pruning
-
-Alpha-Beta pruning is an optimization technique for the Minimax algorithm that significantly reduces the number of nodes that need to be evaluated in the search tree.
 
 ### Optimizations
 
@@ -167,7 +194,6 @@ Prevents memory issues by clearing the transposition table when it becomes too l
 
 Future improvements planned for this project include:
 - Implementation of Reinforcement Learning techniques
-- Development of a graphical user interface
 - Online multiplayer capabilities
 - Implementation of additional AI algorithms for comparison
 - Performance benchmarking and optimization
@@ -175,10 +201,10 @@ Future improvements planned for this project include:
 ### Reinforcement Learning Plans
 
 We plan to enhance the AI with reinforcement learning by:
-1. Setting up a game environment following standards like OpenAI Gym
-2. Defining a reward system (+1 for wins, -1 for losses, 0 for intermediate moves)
+1. Setting up a game environment following standards like `OpenAI` `Gym`
+2. Defining a reward system (+1 for `wins`, -1 for `losses`, 0 for `intermediate moves`)
 3. Implementing experience collection during gameplay
-4. Training the agent using Q-Learning or Deep Q-Networks (DQN)
+4. Training the agent using `Q-Learning` or `Deep Q-Networks (DQN)`
 5. Evaluating and optimizing the agent's performance
 
 ## Team
