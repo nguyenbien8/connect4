@@ -33,13 +33,13 @@ Connect Four is a two-player connection board game where players take turns drop
 
 ## Installation
 
-1. Clone this repository:
+**1. Clone this repository:**
 ```bash
 git clone https://github.com/nguyenbien8/connect4.git
 cd connect4
 ```
 
-2. Install the required dependencies:
+**2. Install the required dependencies:**
 
 ```bash
 pip install -r requirements.txt
