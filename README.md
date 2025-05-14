@@ -8,6 +8,7 @@ An implementation of the classic Connect Four game with an intelligent AI oppone
 
 ## 📋 Table of Contents
 
+- [Team](#team)
 - [Overview](#overview)
 - [Features](#features)
 - [Installation](#installation)
@@ -16,9 +17,16 @@ An implementation of the classic Connect Four game with an intelligent AI oppone
 - [Algorithm](#algorithm)
   - [Minimax and Alpha-Beta Pruning](#minimax-and-alpha-beta-pruning)
   - [Optimizations](#optimizations)
+- [Client - Server Mode](#client---server-mode)
 - [Future Development](#future-development)
-- [Team](#team)
 - [References](#references)
+
+## Team
+
+- Nguyễn Văn Biển `23021477`
+- Nguyễn Quang Hiếu `23021551`
+- Tô Ngọc Hải `23021543`
+- Đỗ Phương Thảo `23021721`
 
 ## Overview
 
@@ -52,6 +60,7 @@ connect4/
 ├── data/                # Game data storage
 ├── images/              # Game images
 ├── models/              # Model implementations
+├── online_mode/         # Client-Server mode
 ├── app.py               # Main application file
 ├── connect4_AI_People.py # Human vs AI implementation
 ├── Dockerfile           # Docker configuration
@@ -195,6 +204,60 @@ def manage_transposition_table():
 
 Prevents memory issues by clearing the transposition table when it becomes too large.
 
+## Client - Server Mode
+
+Connect Four AI supports a multiplayer mode allowing two players to compete over a network using a client-server architecture.
+
+### Network Features
+
+- Real-time two-player gameplay over local network or internet
+- Server-side game state management and move validation
+- Automatic turn coordination between players
+- Visual indicators showing connection status
+- Error handling for network disruptions
+
+### Server
+
+Key server functions:
+
+- `init_server(screen)`: Initializes and runs the server with a Pygame display
+- `Connect4Server.run()`: Starts the server and manages client connections
+- `handle_client()`: Processes communication with each connected player
+- `process_move()`: Validates and applies player moves on the server
+- `update_all_clients()`: Synchronizes game state to all connected players
+
+### Client
+
+Client functions:
+
+- `connect_to_server(server_ip, port)`: Establishes connection to a server
+- Receives player ID (1 or 2) from server
+- Sends move requests when it's the player's turn
+- Receives board updates after each move
+- Displays game state and connection status
+
+```python
+def connect_to_server(server_ip='127.0.0.1', port=12345):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((server_ip, port))
+        return sock
+    except Exception as e:
+        print(f"Connection error: {e}")
+        show_error_message(f"Cannot connect to server at {server_ip}")
+        return None
+```
+
+### Communication Protocol
+
+The client and server exchange simple text messages:
+
+- Player assignment: Server sends player ID (1 or 2)
+- Turn management: "your_turn" or "wait:{player_id}"
+- Move submission: Client sends column number (0-6)
+- Board updates: "board:{state}:{current_player}"
+- Game outcomes: "win:{player_id}" or "opponent_disconnected"
+
 ## Future Development
 
 Future improvements planned for this project include:
@@ -211,13 +274,6 @@ We plan to enhance the AI with reinforcement learning by:
 3. Implementing experience collection during gameplay
 4. Training the agent using `Q-Learning` or `Deep Q-Networks (DQN)`
 5. Evaluating and optimizing the agent's performance
-
-## Team
-
-- Nguyễn Văn Biển `23021477`
-- Nguyễn Quang Hiếu `23021551`
-- Tô Ngọc Hải `23021543`
-- Đỗ Phương Thảo `23021721`
 
 ## References
 
