@@ -50,6 +50,7 @@ pip install -r requirements.txt
 ```bash
 connect4/
 ├── data/                # Game data storage
+├── images/              # Game images
 ├── models/              # Model implementations
 ├── app.py               # Main application file
 ├── connect4_AI_People.py # Human vs AI implementation
