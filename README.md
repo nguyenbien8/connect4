@@ -252,11 +252,11 @@ def connect_to_server(server_ip='127.0.0.1', port=12345):
 
 The client and server exchange simple text messages:
 
-- Player assignment: Server sends player ID (1 or 2)
-- Turn management: "your_turn" or "wait:{player_id}"
+- Player assignment: Server sends player `ID (1 or 2)`
+- Turn management: `your_turn` or `wait:{player_id}`
 - Move submission: Client sends column number (0-6)
-- Board updates: "board:{state}:{current_player}"
-- Game outcomes: "win:{player_id}" or "opponent_disconnected"
+- Board updates: `board:{state}:{current_player}`
+- Game outcomes: `win:{player_id}` or `opponent_disconnected`
 
 ## Future Development
 
