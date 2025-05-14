@@ -68,7 +68,11 @@ Run the game using Python:
 python connect4_AI_People.py
 ```
 
-Play and enjoy the game with the game interface
+Play and enjoy the game with the game interface. The human and machine in the game will have a random order of going first. Below is a demo of the interface when you play human vs computer mode:
+
+![Demo AI wins](images/connect4_game_demo.png)
+
+*Demo AI wins*
 
 ## Algorithm
 
