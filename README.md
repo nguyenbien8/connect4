@@ -19,7 +19,6 @@ An implementation of the classic Connect Four game with an intelligent AI oppone
   - [Q-Learning Enhancement](#q-learning-enhancement)
   - [Optimizations](#optimizations)
 - [Client - Server Mode](#client---server-mode)
-- [Future Development](#future-development)
 - [References](#references)
 
 ## Team
@@ -316,23 +315,6 @@ The client and server exchange simple text messages:
 - Move submission: Client sends column number (0-6)
 - Board updates: `board:{state}:{current_player}`
 - Game outcomes: `win:{player_id}` or `opponent_disconnected`
-
-## Future Development
-
-Future improvements planned for this project include:
-- Implementation of Reinforcement Learning techniques
-- Online multiplayer capabilities
-- Implementation of additional AI algorithms for comparison
-- Performance benchmarking and optimization
-
-### Reinforcement Learning Plans
-
-We plan to enhance the AI with reinforcement learning by:
-1. Setting up a game environment following standards like `OpenAI` `Gym`
-2. Defining a reward system (+1 for `wins`, -1 for `losses`, 0 for `intermediate moves`)
-3. Implementing experience collection during gameplay
-4. Training the agent using `Q-Learning` or `Deep Q-Networks (DQN)`
-5. Evaluating and optimizing the agent's performance
 
 ## References
 
