@@ -16,9 +16,9 @@ An implementation of the classic Connect Four game with an intelligent AI oppone
 - [Usage](#usage)
 - [Algorithm](#algorithm)
   - [Minimax and Alpha-Beta Pruning](#minimax-and-alpha-beta-pruning)
+  - [Q-Learning Enhancement](#q-learning-enhancement)
   - [Optimizations](#optimizations)
 - [Client - Server Mode](#client---server-mode)
-- [Future Development](#future-development)
 - [References](#references)
 
 ## Team
@@ -154,6 +154,64 @@ def minimax(board, depth, alpha, beta, maximizing_player):
         return column, value
 ```
 
+### Q-Learning Enhancement
+
+The Q-Learning implementation provides a reinforcement learning approach to the Connect Four game. This algorithm learns optimal strategies through experience rather than pure calculation.
+
+#### Q-Learning Architecture
+
+The `PlayQlearning` class initializes with player information (player = 1 or 2) and maintains a `Q-table` as a dictionary mapping board states to arrays of `Q-values`. Each state is represented as a string of 42 characters (HEIGHT × WIDTH), where each character represents a cell's value (`0: empty`, `1: player`, `2: opponent`).
+
+```python
+Q-table structure:
+{
+    "board_state_string": [q_value_col0, q_value_col1, ..., q_value_col6]
+}
+```
+
+#### Move Selection
+
+During gameplay, the AI selects moves using the `findBestMove()` function, which:
+1. Retrieves the `Q-values` for the current board state
+2. Selects the column with the highest `Q-value`
+3. If that column is full, sets its `Q-value` to -1.0 to exclude it from consideration
+4. Records the state and action in the history list for later updates
+
+#### Learning Mechanism
+
+After each game, the `finalResult(winner)` function updates the `Q-table` using a temporal difference learning approach:
+1. Determines the game outcome with corresponding rewards: 
+- Win: 1.0
+- Draw: 0.5
+- Loss: 0.0
+
+2. Processes the history of moves in reverse order, updating `Q-values` using the formula:
+
+```bash
+Q(s,a) ← Q(s,a) + α[r + γ·max(a')Q(s',a') - Q(s,a)]
+```
+
+Where:
+- `α = 0.9` (learning rate): Determines how much new information overrides old information
+- `γ = 0.95` (discount factor): Values future rewards
+- `Q(s,a)`: Current `Q-value` for state s and action a
+- `max(Q(s'))`: Maximum `Q-value` for the next state `s'`
+
+#### Training Process
+
+The training process uses the `trainQLearning()` function:
+
+1. Creates two Q-learning agents (playerQ1 and playerQ2)
+2. Has them play against each other for a specified number of games
+3. Randomly selects who goes first in each game
+4. Updates `Q-values` after each game based on the outcome
+
+Additional functionality is provided through the play() function, which can:
+
+1. Run matches between Minimax and Q-learning agents
+2. Track win ratios across multiple games
+3. Pre-train Q-learning agents before competitive play
+
 ### Optimizations
 
 **1. Transposition Table**
@@ -257,23 +315,6 @@ The client and server exchange simple text messages:
 - Move submission: Client sends column number (0-6)
 - Board updates: `board:{state}:{current_player}`
 - Game outcomes: `win:{player_id}` or `opponent_disconnected`
-
-## Future Development
-
-Future improvements planned for this project include:
-- Implementation of Reinforcement Learning techniques
-- Online multiplayer capabilities
-- Implementation of additional AI algorithms for comparison
-- Performance benchmarking and optimization
-
-### Reinforcement Learning Plans
-
-We plan to enhance the AI with reinforcement learning by:
-1. Setting up a game environment following standards like `OpenAI` `Gym`
-2. Defining a reward system (+1 for `wins`, -1 for `losses`, 0 for `intermediate moves`)
-3. Implementing experience collection during gameplay
-4. Training the agent using `Q-Learning` or `Deep Q-Networks (DQN)`
-5. Evaluating and optimizing the agent's performance
 
 ## References
 
