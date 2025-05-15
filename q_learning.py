@@ -1,5 +1,7 @@
 import numpy as np
-
+from board import *
+from pandas import read_csv
+import ast
 HEIGHT = 5
 WIDTH = 6
 # rewards
@@ -13,7 +15,11 @@ q_init=0.6 # init q table
 
 class PlayQlearning():
     def __init__(self, player):
-        self.QTable = {}
+        Q_table = {}
+        table = read_csv('q_learning_table.csv')
+        for i in range(len(table['states'])):
+            Q_table[table['states'][i]] = ast.literal_eval(table['scores'][i])
+        self.QTable = Q_table
         self.history = []
         self.player = 1
         self.opponent = 2
